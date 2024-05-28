@@ -16,8 +16,23 @@ const getSingleProductFromDb = async (id: string) => {
   return result
 }
 
+const updateSignleProduct = async (id: string) => {
+  const result = await Product.updateOne(
+    { _id: id },
+    { $set: { name: 'some' } },
+  )
+  return result
+}
+
+const deleteSingleProduct = async (id: string) => {
+  const result = await Product.deleteOne({ _id: id })
+  return result
+}
+
 export const ProductService = {
   createProduct,
   getAllProductsFromDb,
   getSingleProductFromDb,
+  updateSignleProduct,
+  deleteSingleProduct,
 }
