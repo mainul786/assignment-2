@@ -15,7 +15,7 @@ const productCreateController = async (req: Request, res: Response) => {
       message: 'Product inserted succefully',
       data: result,
     })
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       status: false,
       message: err.message || 'Something Went is wrong',
@@ -32,7 +32,7 @@ const getAllProductController = async (req: Request, res: Response) => {
       message: 'Getting all data succefully!',
       data: result,
     })
-  } catch (err) {
+  } catch (err: any) {
     res.status(500).json({
       status: false,
       message: err.message || 'something went is wrong!',
@@ -41,7 +41,27 @@ const getAllProductController = async (req: Request, res: Response) => {
   }
 }
 
+const getSingleProductController = async (req: Request, res: Response) => {
+  try {
+    const { productId } = req.params
+
+    const result = await ProductService.getSingleProductFromDb(productId)
+    res.status(200).json({
+      status: true,
+      message: 'Getting single data succefully!',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      status: false,
+      message: err.message || 'something is wrong',
+      error: err,
+    })
+  }
+}
+
 export const ProductControllerService = {
   productCreateController,
   getAllProductController,
+  getSingleProductController,
 }

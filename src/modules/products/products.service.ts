@@ -11,7 +11,13 @@ const getAllProductsFromDb = async () => {
   return result
 }
 
+const getSingleProductFromDb = async (id: string) => {
+  const result = await Product.findById({ _id: id })
+  return result
+}
+
 export const ProductService = {
   createProduct,
   getAllProductsFromDb,
+  getSingleProductFromDb,
 }
