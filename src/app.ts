@@ -1,8 +1,16 @@
-import express, { Application, Request, Response } from "express";
-const app: Application = express();
+import express, { Application, Request, Response } from 'express'
+import cors from 'cors'
+import { ProducutsRoute } from './modules/products/products.router'
+const app: Application = express()
 
-app.get("/", (req: Request, res: Response) => {
-  res.send("Hello World!");
-});
+//parser
+app.use(express.json())
+app.use(cors())
 
-export default app;
+app.use('/api/products/', ProducutsRoute)
+
+app.get('/', (req: Request, res: Response) => {
+  res.send('Hello World!')
+})
+
+export default app
