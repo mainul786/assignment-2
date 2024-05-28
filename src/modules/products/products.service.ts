@@ -6,9 +6,21 @@ const createProduct = async (productData: TProducts) => {
   return result
 }
 
-const getAllProductsFromDb = async () => {
-  const result = await Product.find()
-  return result
+const getAllProductsFromDb = async (searchTerm?: string) => {
+  if (searchTerm) {
+    const searchRegEx = new RegExp(searchTerm, 'i')
+    const result = await Product.find({
+      $or: [
+        { name: { $regex: searchRegEx } },
+        { description: { $regex: searchRegEx } },
+      ],
+    })
+    console.log(result)
+    return result
+  } else {
+    const result = await Product.find()
+    return result
+  }
 }
 
 const getSingleProductFromDb = async (id: string) => {
@@ -16,10 +28,14 @@ const getSingleProductFromDb = async (id: string) => {
   return result
 }
 
-const updateSignleProduct = async (id: string) => {
-  const result = await Product.updateOne(
-    { _id: id },
-    { $set: { name: 'some' } },
+const updateSignleProduct = async (
+  id: string,
+  productData: Partial<TProducts>,
+) => {
+  const result = await Product.findByIdAndUpdate(
+    id,
+    { $set: productData },
+    { new: true, runValidators: true },
   )
   return result
 }

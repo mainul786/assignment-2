@@ -1,6 +1,7 @@
 import { Request, Response } from 'express'
 import { ProductService } from './products.service'
 import productsValidationSchema from './products.validationJoi'
+import { TProducts } from './products.interface'
 
 const productCreateController = async (req: Request, res: Response) => {
   try {
@@ -26,12 +27,22 @@ const productCreateController = async (req: Request, res: Response) => {
 
 const getAllProductController = async (req: Request, res: Response) => {
   try {
-    const result = await ProductService.getAllProductsFromDb()
-    res.status(200).json({
-      success: true,
-      message: 'Getting all data succefully!',
-      data: result,
-    })
+    const searchTerm = req.query.searchTerm as string
+    if (searchTerm) {
+      const result = await ProductService.getAllProductsFromDb(searchTerm)
+      res.status(200).json({
+        success: true,
+        message: 'Product Find succefully',
+        data: result,
+      })
+    } else {
+      const result = await ProductService.getAllProductsFromDb()
+      res.status(200).json({
+        success: true,
+        message: 'Getting all data succefully!',
+        data: result,
+      })
+    }
   } catch (err: any) {
     res.status(500).json({
       success: false,
@@ -62,19 +73,12 @@ const getSingleProductController = async (req: Request, res: Response) => {
 
 const updateSingleProductController = async (req: Request, res: Response) => {
   const { productId } = req.params
-  // const { name, description, price, category, tags, variants, inventory } =
-  //   req.body
-  // const data = {
-  //   name,
-  //   description,
-  //   price,
-  //   category,
-  //   tags,
-  //   variants,
-  //   inventory,
-  // }
-
-  const result = await ProductService.updateSignleProduct(productId)
+  const productData: Partial<TProducts> = req.body
+  const result = await ProductService.updateSignleProduct(
+    productId,
+    productData,
+  )
+  console.log(result)
   res.status(200).json({
     success: true,
     message: 'Updated Successfully',
@@ -83,13 +87,21 @@ const updateSingleProductController = async (req: Request, res: Response) => {
 }
 
 const deleteSingleProductController = async (req: Request, res: Response) => {
-  const { productId } = req.params
-  const result = await ProductService.deleteSingleProduct(productId)
-  res.status(200).json({
-    success: true,
-    message: 'Product delete succefully',
-    data: result,
-  })
+  try {
+    const { productId } = req.params
+    const result = await ProductService.deleteSingleProduct(productId)
+    res.status(200).json({
+      success: true,
+      message: 'Product delete succefully',
+      data: result,
+    })
+  } catch (err: any) {
+    res.status(500).json({
+      success: false,
+      message: err.message || 'something went is wrong',
+      error: err,
+    })
+  }
 }
 
 export const ProductControllerService = {

@@ -15,4 +15,5 @@ router.delete(
   '/:productId',
   ProductControllerService.deleteSingleProductController,
 )
+
 export const ProducutsRoute = router
