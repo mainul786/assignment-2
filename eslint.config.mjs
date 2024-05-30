@@ -9,7 +9,7 @@ export default [
         ...globals.node,
       },
     },
-    ignores: ['**/node_modules/', '.dist/'],
+    ignores: ['**/node_modules/', '**/dist/'],
     rules: {
       'no-unused-vars': 'error',
       'no-undef': 'error',
