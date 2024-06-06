@@ -7,12 +7,8 @@ const createOrder = async (order: string) => {
 
 const getOrdderFromDb = async (email?: string) => {
   if (email) {
-    const searchRegEx = new RegExp(email, 'i')
     const result = await Order.find({
-      $or: [
-        { email: { $regex: searchRegEx } },
-        { description: { $regex: searchRegEx } },
-      ],
+      email,
     })
     return result
   } else {
